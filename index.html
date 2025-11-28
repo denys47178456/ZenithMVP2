@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVP Хедер та Футер + Flexbox Froggy CSS</title>
+    <style>
+        /* ====================================
+           1. Глобальні стилі та кольори
+           ==================================== */
+        :root {
+            --primary-color: #FF6347; /* Оранжево-червоний (Акцент) */
+            --accent-color: #CC0000; /* Глибокий Червоний (Наведення/Важливість) */
+            --background-color: #FFFFFF; /* Білий */
+            --text-color: #333;
+            --light-text-color: #f0f0f0;
+            --frog-color: #2e7d32; /* Темно-зелений для жаби */
+            --lily-pad-color: #7cb342; /* Світло-зелений для латаття */
+            --board-bg: #81c784; /* Світліший зелений для водойми */
+            --code-bg: #272822; /* Темний фон для редактора коду */
+            --code-text: #f8f8f2;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.2s;
+        }
+        
+        /* ====================================
+           2. ХЕДЕР СТИЛІ (Збережено)
+           ==================================== */
+        header {
+            background-color: var(--background-color);
+            padding: 15px 40px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .cta-button {
+            padding: 8px 18px;
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        /* ====================================
+           3. ФУТЕР СТИЛІ (Збережено)
+           ==================================== */
+        footer {
+            margin-top: auto; /* Притискає футер до низу */
+            background-color: #222;
+            color: var(--light-text-color);
+            padding: 40px 40px 20px;
+            line-height: 1.6;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+
+        .footer-section {
+            flex-basis: 200px;
+            flex-grow: 1;
+        }
+
+        .footer-section h4 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section a {
+            color: var(--light-text-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 1.5em;
+            color: var(--primary-color);
+        }
+
+        .social-icons a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           4. FLEXBOX FROGGY GAME СТИЛІ
+           ==================================== */
+        
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-interface {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* --- ІГРОВЕ ПОЛЕ (ліва панель) --- */
+        .game-board-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--background-color);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #game-board {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            background-color: var(--board-bg);
+            border: 4px solid var(--frog-color);
+            border-radius: 10px;
+            display: flex; /* Це наш Flex-контейнер, який ми програмуємо */
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Властивості Flexbox будуть додані тут через JS */
+        }
+        
+        .lily-pad {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: var(--lily-pad-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.5s ease;
+        }
+
+        .frog {
+            width: 80px;
+            height: 80px;
+            background-color: var(--frog-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            position: relative; /* Щоб flexbox міг його позиціонувати */
+        }
+        
+        /* --- РЕДАКТОР КОДУ (права панель) --- */
+        .code-editor-area {
+            flex: 1;
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-editor-area h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        #instructions {
+            background-color: #383838;
+            color: #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-size: 0.9em;
+        }
+
+        #css-editor {
+            width: 100%;
+            height: 250px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            background-color: #3e3e3e;
+            color: var(--code-text);
+            border: none;
+            resize: none;
+            box-sizing: border-box;
+            line-height: 1.5;
+        }
+        
+        #check-button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.1s;
+        }
+        
+        #check-button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .level-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .level-status {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .next-level-btn {
+            background-color: var(--frog-color);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: none; /* Приховано до перемоги */
+        }
+        .next-level-btn:hover { background-color: #1e5e22; }
+
+        /* --- СТАТУС --- */
+        #message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .message-win { background-color: #d4edda; color: #155724; }
+        .message-fail { background-color: #f8d7da; color: #721c24; }
+        .message-info { background-color: #fff3cd; color: #856404; }
+
+        /* ====================================
+           5. МЕДІА ЗАПИТИ (Адаптивність)
+           ==================================== */
+        @media (max-width: 900px) {
+            .game-interface {
+                flex-direction: column;
+            }
+            .game-board-area {
+                order: 2; /* Ігрове поле знизу */
+            }
+            .code-editor-area {
+                order: 1; /* Редактор коду зверху */
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* ... (Стилі хедер/футер, як і раніше) */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- ХЕДЕР -->
+    <!-- ---------------------------------------------------- -->
+    <header>
+        <div class="logo">
+            <a href="#">ZENITH-MVP</a>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Головна</a></li>
+                <li><a href="#">Про нас</a></li>
+                <li><a href="#">Послуги</a></li>
+                <li><a href="#">Портфоліо</a></li>
+                <li><a href="#">Контакти</a></li>
+            </ul>
+        </nav>
+        
+        <a href="#" class="cta-button">Почати</a>
+        
+        <div class="menu-toggle">☰</div>
+        
+    </header>
+
+    <main>
+        
+        <!-- ---------------------------------------------------- -->
+        <!-- FLEXBOX FROGGY CSS GAME -->
+        <!-- ---------------------------------------------------- -->
+        <div class="game-header">
+            <h2>🐸 Flexbox Froggy Trainer</h2>
+            <p>Використовуйте властивості CSS Flexbox, щоб перемістити жабу на латаття!</p>
+        </div>
+        
+        <div class="game-interface">
+            
+            <!-- Ліва Панель: Ігрове Поле -->
+            <div class="game-board-area">
+                <div id="game-board">
+                    <!-- Латаття та жаби будуть додані/позиціоновані тут -->
+                </div>
+            </div>
+
+            <!-- Права Панель: Редактор Коду -->
+            <div class="code-editor-area">
+                <h3>Рівень <span id="level-display">1</span> з 8</h3>
+                
+                <div id="instructions">
+                    <!-- Інструкції для поточного рівня -->
+                </div>
+                
+                <label for="css-editor" style="font-weight: bold; display: block; margin-bottom: 5px; color: #ccc;">#game-board { display: flex;</label>
+                <textarea id="css-editor" placeholder="/* Ваш код тут */"></textarea>
+                <label for="css-editor" style="font-weight: bold; display: block; margin-top: 5px; color: #ccc;">}</label>
+                
+                <button id="check-button">Перевірити код</button>
+                
+                <div id="message" class="message-info">
+                    Введіть код і натисніть "Перевірити".
+                </div>
+
+                <div class="level-controls">
+                    <button id="prev-level-btn" class="next-level-btn" style="background-color: #6c757d; display: block;">&larr; Попередній</button>
+                    <button id="next-level-btn" class="next-level-btn">Далі &rarr;</button>
+                </div>
+            </div>
+        </div>
+        <!-- ---------------------------------------------------- -->
+        
+    </main>
+    
+    <!-- ---------------------------------------------------- -->
+    <!-- ФУТЕР -->
+    <!-- ---------------------------------------------------- -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section contact-info"><h4>Контакти</h4><p>Електронна пошта: info@mvp.ua</p><p>Телефон: +38 0XX XXX XX XX</p><p>Адреса: Київ, Україна</p></div>
+            <div class="footer-section quick-links"><h4>Швидкі посилання</h4><ul><li><a href="#">Політика конфіденційності</a></li><li><a href="#">Умови використання</a></li><li><a href="#">FAQ</a></li><li><a href="#">Кар'єра</a></li></ul></div>
+            <div class="footer-section social"><h4>Слідкуйте за нами</h4><div class="social-icons"><a href="#" title="Facebook">📘</a><a href="#" title="Twitter">🐦</a><a href="#" title="Instagram">📸</a><a href="#" title="LinkedIn">🔗</a></div></div>
+        </div>
+        <div class="copyright">&copy; 2025 Zenith MVP. Усі права захищені.</div>
+    </footer>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- JAVASCRIPT ДЛЯ ЛОГІКИ ГРИ -->
+    <!-- ---------------------------------------------------- -->
+    <script>
+        // DOM Елементи
+        const gameBoard = document.getElementById('game-board');
+        const levelDisplay = document.getElementById('level-display');
+        const instructionsDiv = document.getElementById('instructions');
+        const cssEditor = document.getElementById('css-editor');
+        const checkButton = document.getElementById('check-button');
+        const messageDiv = document.getElementById('message');
+        const nextLevelBtn = document.getElementById('next-level-btn');
+        const prevLevelBtn = document.getElementById('prev-level-btn');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        let currentLevelIndex = 0;
+
+        // Визначення рівнів (8 рівнів MVP)
+        const levels = [
+            { 
+                id: 1, 
+                instructions: "Жаба має переміститися праворуч. Використовуйте <code>justify-content</code>.", 
+                expected: "justify-content: flex-end;", 
+                elements: [{ type: 'frog', class: 'frog' }, { type: 'lily', class: 'lily-pad', pos: 'flex-end' }] 
+            },
+            { 
+                id: 2, 
+                instructions: "Перемістіть жабу до центру. Використовуйте <code>justify-content</code>.", 
+                expected: "justify-content: center;", 
+                elements: [{ type: 'frog', class: 'frog' }, { type: 'lily', class: 'lily-pad', pos: 'center' }] 
+            },
+            { 
+                id: 3, 
+                instructions: "Латаття розташовані по краях. Використовуйте <code>justify-content</code>, щоб розмістити жабу посередині.", 
+                expected: "justify-content: space-between;", 
+                elements: [
+                    { type: 'lily', class: 'lily-pad', pos: 'start' }, 
+                    { type: 'frog', class: 'frog' }, 
+                    { type: 'lily', class: 'lily-pad', pos: 'end' }
+                ] 
+            },
+            { 
+                id: 4, 
+                instructions: "Розділіть жабу та два латаття рівними проміжками з усіх боків. Використовуйте <code>justify-content</code>.", 
+                expected: "justify-content: space-around;", 
+                elements: [
+                    { type: 'frog', class: 'frog' }, 
+                    { type: 'lily', class: 'lily-pad' }, 
+                    { type: 'lily', class: 'lily-pad' }
+                ] 
+            },
+            { 
+                id: 5, 
+                instructions: "Перемістіть жабу вниз, використовуючи властивість <code>align-items</code>.", 
+                expected: "align-items: flex-end;", 
+                elements: [{ type: 'frog', class: 'frog' }, { type: 'lily', class: 'lily-pad', style: 'position: absolute; bottom: 0; left: 0; z-index: -1;' }] 
+            },
+            { 
+                id: 6, 
+                instructions: "Розмістіть жабу точно по центру (горизонтально та вертикально). Потрібні дві властивості.", 
+                expected: "justify-content: center; align-items: center;", 
+                elements: [{ type: 'frog', class: 'frog' }, { type: 'lily', class: 'lily-pad', style: 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1;' }] 
+            },
+            { 
+                id: 7, 
+                instructions: "Жаба має стати в рядку з лататтям. Змініть напрямок Flex-контейнера на вертикальний за допомогою <code>flex-direction</code>, а потім розмістіть у центрі.", 
+                expected: "flex-direction: column; justify-content: center;", 
+                elements: [
+                    { type: 'lily', class: 'lily-pad' }, 
+                    { type: 'frog', class: 'frog' }, 
+                    { type: 'lily', class: 'lily-pad' }
+                ] 
+            },
+            { 
+                id: 8, 
+                instructions: "Змініть порядок, щоб жаба була внизу, а латаття — угорі. Використовуйте <code>flex-direction</code>, а потім <code>justify-content</code>.", 
+                expected: "flex-direction: column-reverse; justify-content: flex-end;", 
+                elements: [
+                    { type: 'frog', class: 'frog' }, 
+                    { type: 'lily', class: 'lily-pad' }, 
+                    { type: 'lily', class: 'lily-pad' }
+                ] 
+            },
+        ];
+
+        // Функція для оновлення повідомлення про статус
+        function setMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message-${type}`;
+        }
+        
+        // Функція для рендерингу ігрового поля
+        function renderBoard() {
+            gameBoard.innerHTML = '';
+            const level = levels[currentLevelIndex];
+
+            // Створення елементів для поточного рівня
+            level.elements.forEach(el => {
+                const item = document.createElement('div');
+                item.className = el.class;
+                
+                if (el.type === 'frog') {
+                    item.innerHTML = '🐸';
+                    item.id = 'the-frog';
+                } else if (el.type === 'lily') {
+                    item.innerHTML = '🏵️';
+                    if (el.style) {
+                         // Це використовується для латаття, яке виступає як ціль у 2D просторі
+                        item.style.cssText = el.style;
+                    }
+                }
+                gameBoard.appendChild(item);
+            });
+            
+            // Якщо є латаття, яке є цільовою позицією (як у рівнях 1, 2)
+            // Ми беремо перший елемент, який не є жабою, і робимо його цільовим.
+            const targetPads = gameBoard.querySelectorAll('.lily-pad:not(#the-frog)');
+            if (targetPads.length > 0) {
+                targetPads.forEach(pad => {
+                    pad.classList.add('target-pad');
+                });
+            }
+
+            // Оновлення інструкцій та лічильника
+            levelDisplay.textContent = currentLevelIndex + 1;
+            instructionsDiv.innerHTML = `<strong>Завдання:</strong> ${level.instructions}`;
+            
+            // Скидання редактора та стилів
+            cssEditor.value = '';
+            gameBoard.style.cssText = 'display: flex;'; 
+            setMessage('Введіть код і натисніть "Перевірити".', 'info');
+            nextLevelBtn.style.display = 'none';
+            
+            // Керування кнопками навігації
+            prevLevelBtn.style.display = (currentLevelIndex > 0) ? 'block' : 'none';
+        }
+
+        // Функція для застосування та перевірки CSS
+        function checkCode() {
+            const level = levels[currentLevelIndex];
+            const userInput = cssEditor.value.trim().toLowerCase().replace(/\s/g, ''); // Нормалізація введеного коду
+            
+            // 1. Застосування коду користувача до ігрової дошки
+            const userStyles = 'display: flex;' + userInput;
+            gameBoard.style.cssText = userStyles;
+
+            // 2. Нормалізація очікуваного коду
+            const expectedStyles = level.expected.toLowerCase().replace(/\s/g, '');
+
+            // 3. Перевірка
+            if (userInput.includes(expectedStyles)) {
+                // Успіх
+                setMessage(`🎉 Чудово! Рівень ${level.id} пройдено!`, 'win');
+                nextLevelBtn.style.display = 'block';
+            } else {
+                // Невдача
+                setMessage(`❌ Спробуйте ще раз. Переконайтеся, що ви використовуєте правильні властивості та значення Flexbox.`, 'fail');
+                nextLevelBtn.style.display = 'none';
+            }
+        }
+        
+        // Функція для завантаження наступного рівня
+        function nextLevel() {
+            if (currentLevelIndex < levels.length - 1) {
+                currentLevelIndex++;
+                renderBoard();
+            } else {
+                setMessage('🥳 Ви пройшли всі доступні рівні MVP!', 'win');
+                nextLevelBtn.style.display = 'none';
+            }
+        }
+
+        // Функція для завантаження попереднього рівня
+        function prevLevel() {
+            if (currentLevelIndex > 0) {
+                currentLevelIndex--;
+                renderBoard();
+            }
+        }
+
+        // ----------------------------------------------------
+        // Обробники подій
+        // ----------------------------------------------------
+        
+        // Кнопка Перевірки
+        checkButton.addEventListener('click', checkCode);
+        
+        // Кнопка Далі
+        nextLevelBtn.addEventListener('click', nextLevel);
+        
+        // Кнопка Попередній
+        prevLevelBtn.addEventListener('click', prevLevel);
+
+        // Обробник для адаптивного меню
+        menuToggle.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // ----------------------------------------------------
+        // Ініціалізація
+        // ----------------------------------------------------
+        window.onload = () => {
+             renderBoard();
+        };
+
+    </script>
+</body>
+</html>
